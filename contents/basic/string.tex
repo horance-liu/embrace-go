@@ -1,0 +1,36 @@
+\begin{savequote}[45mm]
+\ascii{Any fool can write code that a computer can understand. Good programmers write code that humans can understand.}
+\qauthor{\ascii{- Martin Flower}}
+\end{savequote}
+
+\chapter{数据模型} 
+\label{ch:string}
+
+\begin{content}
+
+\end{content}
+
+\section{字符串}
+
+\begin{content}
+
+\subsection{内存表示}
+
+\begin{nodiff}{Hello World}
+ \begin{go}
+// 字节序列：68('h') 65('e') 6c('l') 6c('l') 6f('o') 2c(',') 20(' ') e4 b8 96('世') e7 95 8c('界')
+// 字节长度：len(s) = 13
+// Unicode码字序列：68 65 6c 6c 6f 2c 20 4e16 754c
+// Unicode字符序列：h  e  l  l  o  ,     世    界
+s := "hello, 世界"
+// 世: '\u4e16'
+// codepoint:   4e16     0100   111000   010110
+// utf8:             11100100 10111000 10010110
+ \end{go}
+\end{nodiff}
+
+
+
+
+
+\end{content}

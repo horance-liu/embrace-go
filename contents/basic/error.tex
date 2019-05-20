@@ -1,0 +1,100 @@
+\begin{savequote}[45mm]
+\ascii{Any fool can write code that a computer can understand. Good programmers write code that humans can understand.}
+\qauthor{\ascii{- Martin Flower}}
+\end{savequote}
+
+\chapter{错误处理} 
+\label{ch:error-handle}
+
+\begin{content}
+
+\end{content}
+
+\section{错误处理}
+
+\begin{content}
+
+\subsection{错误表示}
+
+\begin{nodiff}{接口：error}
+ \begin{go}
+package builtin
+
+type error interface {
+	Error() string
+}
+ \end{go}
+\end{nodiff}
+
+\subsection{实现1：逻辑错误}
+
+\begin{nodiff}{包：errors}
+ \begin{go}
+package errors
+
+func New(text string) error {
+	return &errorString{text}
+}
+
+type errorString struct {
+	s string
+}
+
+func (e *errorString) Error() string {
+	return e.s
+}
+ \end{go}
+\end{nodiff}
+
+\begin{nodiff}{包：errors}
+ \begin{go}
+package fmt
+
+import "errors"
+
+func Errorf(format string, a ...interface{}) error {
+	return errors.New(Sprintf(format, a...))
+}
+ \end{go}
+\end{nodiff}
+
+\subsection{实现2：系统错误}
+
+\begin{nodiff}{包：io}
+ \begin{go}
+package syscall
+
+type Errno uintptr
+
+const (
+	E2BIG           = Errno(0x7)
+	EACCES          = Errno(0xd)
+	EADDRINUSE      = Errno(0x62)
+	EADDRNOTAVAIL   = Errno(0x63)
+	EADV            = Errno(0x44)
+	EAFNOSUPPORT    = Errno(0x61)
+	EAGAIN          = Errno(0xb)
+    // ...
+)
+
+var errors = [...]string{
+	1:   "operation not permitted",
+	2:   "no such file or directory",
+	3:   "no such process",
+	4:   "interrupted system call",
+	5:   "input/output error",
+    // ...
+}
+
+func (e Errno) Error() string {
+	if 0 <= int(e) && int(e) < len(errors) {
+		if s := errors[e]; s != "" {
+			return s
+		}
+	}
+	return "errno " + itoa(int(e))
+}
+ \end{go}
+\end{nodiff}
+
+\end{content}
